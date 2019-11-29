@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { ReactComponent as Logo } from "../../assets/crown.svg";
-
+// this syntax is for adding svgs to react.
 import "./header.styles.scss";
 
 
