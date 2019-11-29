@@ -7,7 +7,7 @@
     justify-content: center;
     border: 1px solid black;
     margin: 0 7.5px 15px;
-    overflow: hidden;
+    overflow: hidden; //with this, we dont have the problem of background image getting bigger than container on hover
     &:hover {
         cursor: pointer;
         & .background-image {
@@ -43,7 +43,7 @@
         border: 1px solid black;
         background-color: white;
         opacity: 0.7;
-        position: absolute;
+        position: absolute; //if we didnt add absolute, content would behave like a sibling, positioned on the side of background image
         .title {
             font-weight: bold;
             margin-bottom: 6px;
