@@ -1,5 +1,7 @@
 import React from "react";
 
+import CollectionItem from "../collection-item/collection-item.component"
+
 import "./preview-collection.styles.scss";
 
 const CollectionPreview = ({title, items}) => (
@@ -12,8 +14,8 @@ const CollectionPreview = ({title, items}) => (
             {
                 items
                 .filter((item, idx) => idx < 4) /* we want array to be filtered to only 4 items. only 4 items will show in every title */
-                .map(item => (
-                    <div key= {item.id}>{item.name}</div>
+                .map(({ id, ...otherItemProps }) => (
+                    <CollectionItem key= {id} {...otherItemProps}/>
                 ))
             }
         </div>
