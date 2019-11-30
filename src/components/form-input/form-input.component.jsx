@@ -9,7 +9,9 @@ const FormInput = ({ handleChange, label, ...otherProps}) => (
             label ?  /* if we want to create a label it creates a label, if not null(doesnt create) */
             (<label
                 className={`${
-                    otherProps.value.length ? "shrink" : ""  /* if a user typed in something, then apply shrink value, if not, nothing */
+                    otherProps.value.length ? "shrink" : ""  
+                    /* shrink class is for email and password to shrink up and down, transitioned */
+                    /* if a user typed in something, then apply shrink value, if not, nothing */
                 } form-input-label`} /* In any case, apply form input label */
             >
             {label}
