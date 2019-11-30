@@ -9,4 +9,15 @@ a {
 }
 
 
+/* this is a universal selector for all */
+
+
+/* and border box is for elements not to take more space than their divs
+like if an input is bigger than its div, it puts that input inside the div */
+
+* {
+    box-sizing: border-box;
+}
+
+
 /* Links are originally a tags so we had to style them from here */
