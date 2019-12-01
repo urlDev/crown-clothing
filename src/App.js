@@ -7,7 +7,7 @@ import HomePage from './pages/homepage/homepage.component.jsx';
 import ShopPage from './pages/shop/shop.component.jsx';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx';
 import Header from './components/header/header.component.jsx';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends React.Component {
 	constructor(props) {
@@ -22,13 +22,35 @@ class App extends React.Component {
 	unsubscribeFromAuth: null
 	
 	componentDidMount () {
-		/* this function comes from firebase. also user comes from google too.
+		/* this is an auth object,  */
+		/* this function comes from firebase auth. also user comes from google too.
 		where we can see displayName and email of the user, which google stores */
-		this.unsubscribeFromAuth = auth.onAuthStateChanged( user => {
-			this.setState ({ currentUser: user });
+		this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+			/*this.setState ({ currentUser: user });
+			console.log(user); */
+			
+			// if userAuth is true, exists not null
+			if (userAuth) {	
+				const userRef = await createUserProfileDocument(userAuth);
 
-			console.log(user);
-		})
+				// onSnapShot is a firebase function and we pass in snapshot we created
+				userRef.onSnapshot(snapShot => {
+					this.setState({
+						currentUser: {
+							// we used snapshot.id to get id but snapshot doesnt have other data like displayName
+							// so we also used snapshot.data() to get the name and id together
+							id: snapShot.id,
+							...snapShot.data()
+						}
+					// we did it like this because setState is async.
+					// to make it sync we call an anonymous function and put console log inside it
+					})  //, () => {console.log(this.state);} 
+				});
+			}
+			else {
+				this.setState({currentUser: userAuth});
+			}
+		});
 	}
 
 	componentWillUnmount() {
