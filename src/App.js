@@ -12,29 +12,28 @@ import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 class App extends React.Component {
 	constructor(props) {
 		super(props);
-		
 
 		this.state = {
 			currentUser: null
-		}
+		};
 	}
 
-	unsubscribeFromAuth: null
-	
-	componentDidMount () {
+	unsubscribeFromAuth: null;
+
+	componentDidMount() {
 		/* this is an auth object,  */
 		/* this function comes from firebase auth. also user comes from google too.
 		where we can see displayName and email of the user, which google stores */
-		this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+		this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
 			/*this.setState ({ currentUser: user });
 			console.log(user); */
-			
+
 			// if userAuth is true, exists not null
-			if (userAuth) {	
+			if (userAuth) {
 				const userRef = await createUserProfileDocument(userAuth);
 
 				// onSnapShot is a firebase function and we pass in snapshot we created
-				userRef.onSnapshot(snapShot => {
+				userRef.onSnapshot((snapShot) => {
 					this.setState({
 						currentUser: {
 							// we used snapshot.id to get id but snapshot doesnt have other data like displayName
@@ -42,13 +41,12 @@ class App extends React.Component {
 							id: snapShot.id,
 							...snapShot.data()
 						}
-					// we did it like this because setState is async.
-					// to make it sync we call an anonymous function and put console log inside it
-					})  //, () => {console.log(this.state);} 
+						// we did it like this because setState is async.
+						// to make it sync we call an anonymous function and put console log inside it
+					}); //, () => {console.log(this.state);}
 				});
-			}
-			else {
-				this.setState({currentUser: userAuth});
+			} else {
+				this.setState({ currentUser: userAuth });
 			}
 		});
 	}
@@ -56,7 +54,6 @@ class App extends React.Component {
 	componentWillUnmount() {
 		this.unsubscribeFromAuth();
 	}
-
 
 	render() {
 		return (
@@ -66,12 +63,14 @@ class App extends React.Component {
                         			as name suggests, its for url to be exact. path is what will show in url
                         			and component is what will be put in there.
                         			 */}{' '}
-				<Header currentUser={this.state.currentUser}/>{/*telling header to be aware of current user state */}
+				<Header currentUser={this.state.currentUser} />
+				{/*telling header to be aware of current user state */}
 				{/* header is here outside the switch so it would always be on top no matter which page we are in */}{' '}
 				<Switch>
 					{' '}
-					{/* switch means it will render only that page, thats matching to the url */}  {' '}
-					<Route exact path="/" component={HomePage} /> <Route path="/shop" component={ShopPage} />{' '}
+					{/* switch means it will render only that page, thats matching to the url */} {' '}
+					<Route exact path="/" component={HomePage} />
+					<Route path="/shop" component={ShopPage} />
 					<Route path="/signin" component={SignInAndSignUpPage} />{' '}
 				</Switch>{' '}
 			</div>
