@@ -63,7 +63,7 @@ class App extends React.Component {
                         			as name suggests, its for url to be exact. path is what will show in url
                         			and component is what will be put in there.
                         			 */}{' '}
-				<Header currentUser={this.state.currentUser} />
+				<Header />
 				{/*telling header to be aware of current user state */}
 				{/* header is here outside the switch so it would always be on top no matter which page we are in */}{' '}
 				<Switch>
