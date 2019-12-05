@@ -1,6 +1,6 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { connect } from "react-redux";
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './App.css';
 
 import HomePage from './pages/homepage/homepage.component.jsx';
@@ -8,7 +8,7 @@ import ShopPage from './pages/shop/shop.component.jsx';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx';
 import Header from './components/header/header.component.jsx';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-import { setCurrentUser } from "./redux/user/user.actions";
+import { setCurrentUser } from './redux/user/user.actions';
 
 class App extends React.Component {
 	unsubscribeFromAuth: null;
@@ -28,16 +28,15 @@ class App extends React.Component {
 
 				// onSnapShot is a firebase function and we pass in snapshot we created
 				userRef.onSnapshot((snapShot) => {
-					setCurrentUser  ({
-							// we used snapshot.id to get id but snapshot doesnt have other data like displayName
-							// so we also used snapshot.data() to get the name and id together
-							id: snapShot.id,
-							...snapShot.data()
-						});
-						// we did it like this because setState is async.
-						// to make it sync we call an anonymous function and put console log inside it
-					}); //, () => {console.log(this.state);}
-				
+					setCurrentUser({
+						// we used snapshot.id to get id but snapshot doesnt have other data like displayName
+						// so we also used snapshot.data() to get the name and id together
+						id: snapShot.id,
+						...snapShot.data()
+					});
+					// we did it like this because setState is async.
+					// to make it sync we call an anonymous function and put console log inside it
+				}); //, () => {console.log(this.state);}
 			} else {
 				setCurrentUser(userAuth);
 			}
@@ -64,15 +63,19 @@ class App extends React.Component {
 					{/* switch means it will render only that page, thats matching to the url */} {' '}
 					<Route exact path="/" component={HomePage} />
 					<Route path="/shop" component={ShopPage} />
-					<Route path="/signin" component={SignInAndSignUpPage} />{' '}
-				</Switch>{' '}
+					<Route path="/signin" render={() => this.props.currentUser ? (<Redirect to="/" />) : (<SignInAndSignUpPage/>)}  />
+				</Switch>
 			</div>
 		);
 	}
 }
 
-const mapDispatchToProps = dispatch => ({
-	setCurrentUser: user => dispatch(setCurrentUser(user))
+const mapStateToProps = ({ user }) => ({
+	currentUser: user.currentUser
 });
 
-export default connect(null, mapDispatchToProps)(App);
+const mapDispatchToProps = (dispatch) => ({
+	setCurrentUser: (user) => dispatch(setCurrentUser(user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
