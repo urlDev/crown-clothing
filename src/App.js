@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-
+import { connect } from "react-redux";
 import './App.css';
 
 import HomePage from './pages/homepage/homepage.component.jsx';
@@ -8,19 +8,13 @@ import ShopPage from './pages/shop/shop.component.jsx';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx';
 import Header from './components/header/header.component.jsx';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { setCurrentUser } from "./redux/user/user.actions";
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			currentUser: null
-		};
-	}
-
 	unsubscribeFromAuth: null;
 
 	componentDidMount() {
+		const { setCurrentUser } = this.props;
 		/* this is an auth object,  */
 		/* this function comes from firebase auth. also user comes from google too.
 		where we can see displayName and email of the user, which google stores */
@@ -34,19 +28,18 @@ class App extends React.Component {
 
 				// onSnapShot is a firebase function and we pass in snapshot we created
 				userRef.onSnapshot((snapShot) => {
-					this.setState({
-						currentUser: {
+					setCurrentUser  ({
 							// we used snapshot.id to get id but snapshot doesnt have other data like displayName
 							// so we also used snapshot.data() to get the name and id together
 							id: snapShot.id,
 							...snapShot.data()
-						}
+						});
 						// we did it like this because setState is async.
 						// to make it sync we call an anonymous function and put console log inside it
 					}); //, () => {console.log(this.state);}
-				});
+				
 			} else {
-				this.setState({ currentUser: userAuth });
+				setCurrentUser(userAuth);
 			}
 		});
 	}
@@ -78,4 +71,8 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+	setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+export default connect(null, mapDispatchToProps)(App);
