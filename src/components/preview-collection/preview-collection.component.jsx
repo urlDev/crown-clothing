@@ -14,8 +14,8 @@ const CollectionPreview = ({title, items}) => (
             {
                 items
                 .filter((item, idx) => idx < 4) /* we want array to be filtered to only 4 items. only 4 items will show in every title */
-                .map(({ id, ...otherItemProps }) => (
-                    <CollectionItem key= {id} {...otherItemProps}/>
+                .map(item => (
+                    <CollectionItem key= {item.id} item={item}/>
                 ))
             }
         </div>
