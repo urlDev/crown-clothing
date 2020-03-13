@@ -17,6 +17,8 @@ import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 
+import CurrentUserContext from "./contexts/current-user/current-user.context.jsx";
+
 const App = ({ setCurrentUser, currentUser }) => {
   useEffect(() => {
     const unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
@@ -32,6 +34,7 @@ const App = ({ setCurrentUser, currentUser }) => {
       }
       setCurrentUser(userAuth);
 
+      // this will act as componentWillUnmount()
       return () => {
         unsubscribeFromAuth();
       };
@@ -39,8 +42,10 @@ const App = ({ setCurrentUser, currentUser }) => {
   }, [setCurrentUser]);
 
   return (
-    <div>
-      <Header />
+    <>
+      <CurrentUserContext.Provider>
+        <Header />
+      </CurrentUserContext.Provider>
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/shop" component={ShopPage} />
@@ -53,7 +58,7 @@ const App = ({ setCurrentUser, currentUser }) => {
           }
         />
       </Switch>
-    </div>
+    </>
   );
 };
 
