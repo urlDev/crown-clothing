@@ -43,7 +43,7 @@ const App = ({ setCurrentUser, currentUser }) => {
 
   return (
     <>
-      <CurrentUserContext.Provider>
+      <CurrentUserContext.Provider value={currentUser}>
         <Header />
       </CurrentUserContext.Provider>
       <Switch>
